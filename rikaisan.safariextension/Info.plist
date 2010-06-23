@@ -16,17 +16,6 @@
 	<string>1</string>
 	<key>Chrome</key>
 	<dict>
-		<key>Bars</key>
-		<array>
-			<dict>
-				<key>Filename</key>
-				<string>rikai.html</string>
-				<key>Identifier</key>
-				<string>rikaisan</string>
-				<key>Label</key>
-				<string>Rikaisan</string>
-			</dict>
-		</array>
 		<key>Global Page</key>
 		<string>rikai.html</string>
 	</dict>
@@ -37,6 +26,7 @@
 			<key>End</key>
 			<array>
 				<string>popup.js</string>
+				<string>inject.js</string>
 			</array>
 		</dict>
 		<key>Stylesheets</key>
