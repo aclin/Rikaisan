@@ -3,10 +3,11 @@ function lookup(word) {
 	return "anything";
 }
 
-function respondToMessage(message) {
-	if(message.name === "lookup") {
-		var word = message.message;
-		message.target.page.dispatchMessage("lookup-return", lookup(word));
+function respondToMessage(msgEvent) {
+	console.log("responding");
+	if(msgEvent.message.name === "lookup") {
+		var resp = lookup(msgEvent.message.data);
+		msgEvent.target.page.dispatchMessage(msgEvent.name, resp);
 	}
 }
 
