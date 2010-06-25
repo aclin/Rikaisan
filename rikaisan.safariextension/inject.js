@@ -1,5 +1,5 @@
 /*
- * MessageResponder object
+ * MessageDispatcher object
  *
  * This object acts as one half of the intermediary mechanism between the
  * inject context and the global context. Consumers of this object simply
@@ -20,7 +20,7 @@
  * The response object from global will be passed directly to the registered
  * callback method.
  */
-function MessageResponder() {
+function MessageDispatcher() {
 	this.callbacks = {};
 	var currentId = 0;
 	this.respond = function(msg) {
@@ -28,26 +28,26 @@ function MessageResponder() {
 			this.callbacks[msg.name](msg.message);
 			delete this.callbacks[msg.name];
 		}
-	}
+	};
 	this.setupCallback = function(message, callback) {
 		this.callbacks[currentId] = callback;
 		safari.self.tab.dispatchMessage(currentId, message);
 		currentId++;
-	}
-}
+	};
+};
 
 function testMethod1() {
 	console.log("Starting method 1");
 	var msg = { name : "lookup",
 	            data : "anything"};
-	msgResponder.setupCallback(msg, function(data) {
+	msgDispatcher.setupCallback(msg, function(data) {
 		console.log("Got response " + data);
 	});
-}
+};
 
-msgResponder = new MessageResponder();
+msgDispatcher = new MessageDispatcher();
 safari.self.addEventListener("message", 
-                             function(msg) { msgResponder.respond(msg) }, 
+                             function(msg) { msgDispatcher.respond(msg); }, 
 									  false);
 
 testMethod1();
