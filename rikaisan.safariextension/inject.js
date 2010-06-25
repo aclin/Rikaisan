@@ -29,9 +29,11 @@ function MessageDispatcher() {
 			delete this.callbacks[msg.name];
 		}
 	};
-	this.setupCallback = function(message, callback) {
+	this.setupCallback = function(methodName, arg, callback) {
 		this.callbacks[currentId] = callback;
-		safari.self.tab.dispatchMessage(currentId, message);
+		var msg = { methodName : methodName,
+		            arg : arg };
+		safari.self.tab.dispatchMessage(currentId, msg);
 		currentId++;
 	};
 };
@@ -43,9 +45,7 @@ safari.self.addEventListener("message",
 
 function testMethod1() {
 	console.log("Starting method 1");
-	var msg = { methodName : "lookup",
-	            arg : "anything"};
-	msgDispatcher.setupCallback(msg, function(data) {
+	msgDispatcher.setupCallback("lookup", "anything", function(data) {
 		console.log("Got response " + data);
 	});
 };
