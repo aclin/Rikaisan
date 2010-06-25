@@ -1,4 +1,4 @@
-/*
+/**
  * MessageDispatcher object
  *
  * This object acts as one half of the intermediary mechanism between the
@@ -13,8 +13,8 @@
  * The precise message format will be defined by the handler in global. Currently,
  * the format is simple:
  *
- * var message = { name : string, //name of method
- *                 data : object  // object payload to send to the global method.
+ * var message = { methodName : string, //name of method
+ *                 arg : object  // argument to give the method in global
  *               };
  *
  * The response object from global will be passed directly to the registered
@@ -35,19 +35,19 @@ function MessageDispatcher() {
 		currentId++;
 	};
 };
-
-function testMethod1() {
-	console.log("Starting method 1");
-	var msg = { name : "lookup",
-	            data : "anything"};
-	msgDispatcher.setupCallback(msg, function(data) {
-		console.log("Got response " + data);
-	});
-};
-
 msgDispatcher = new MessageDispatcher();
 safari.self.addEventListener("message", 
                              function(msg) { msgDispatcher.respond(msg); }, 
 									  false);
+
+
+function testMethod1() {
+	console.log("Starting method 1");
+	var msg = { methodName : "lookup",
+	            arg : "anything"};
+	msgDispatcher.setupCallback(msg, function(data) {
+		console.log("Got response " + data);
+	});
+};
 
 testMethod1();

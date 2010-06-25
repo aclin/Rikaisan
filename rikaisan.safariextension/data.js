@@ -9,15 +9,15 @@
 function MessageReceiver() {
 	var methods = {};
 	this.receieveMessage = function(msgEvent) {
-		if(methods[msgEvent.message.name]) {
-			var resp = methods[msgEvent.message.name](msgEvent.message.data);
+		if(methods[msgEvent.message.methodName]) {
+			var resp = methods[msgEvent.message.methodName](msgEvent.message.arg);
 			msgEvent.target.page.dispatchMessage(msgEvent.name, resp);
 		} else {
-			msgEvent.target.page.dispatchMessage(msgEvent.name, "Method: " + msgEvent.message.name + " not found.");
+			msgEvent.target.page.dispatchMessage(msgEvent.name, "Method: " + msgEvent.message.methodName + " not found.");
 		}
 	};
-	this.registerMethod = function(name, method) {
-		methods[name] = method;
+	this.registerMethod = function(methodName, method) {
+		methods[methodName] = method;
 	};
 };
 msgReceiever = new MessageReceiver();
