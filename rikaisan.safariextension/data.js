@@ -39,7 +39,7 @@ function lookup(data) {
 	while(endOffset < data.text.length && data.text.charAt(endOffset) != ' ') {
 		endOffset++;
 	}
-	return { definition : data.text.subString(startOffset, endOffset),
+	return { definition : data.text.substring(startOffset, endOffset),
 		     startOffset : startOffset,
 		     endOffset : endOffset };
 };

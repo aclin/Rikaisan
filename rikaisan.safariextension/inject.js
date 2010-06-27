@@ -46,7 +46,7 @@ var settings = {
 		lookBackwardLength : 13,
 		lookForwardLength : 13
 };
-
+/*
 function testMethod1() {
 	console.log("Starting method 1");
 	msgDispatcher.setupCallback("lookup", "anything", function(data) {
@@ -55,22 +55,39 @@ function testMethod1() {
 };
 
 testMethod1();
-
+*/
 function onMouseMove(event) {
-	var sel = document.defaultView.getSelection();
-	sel.removeAllRanges();
-	var caretPoint = document.caretRangeFromPoint(event.clientX, event.clientY);
+	var x = event.clientX;
+	var y = event.clientY;
+	var caretPoint = document.caretRangeFromPoint(x, y);
 	var range = document.createRange();
 	var startOffset = Math.max(0, caretPoint.startOffset - settings.lookBackwardLength);
 	var endOffset = Math.min(caretPoint.startContainer.nodeValue.length, caretPoint.startOffset + settings.lookForwardLength);
 	range.setStart(caretPoint.startContainer, startOffset);
 	range.setEnd(range.startContainer, endOffset);
 	//console.log("Got mouse move. (" + event.clientX + "," + event.clientY + ")");
-	console.log(range.cloneContents());
-	if(range) {
-		console.log("range is non-null");
+	var lookupArg = {
+			text : getRangeText(range),
+			point : caretPoint.startOffset - startOffset
+	};
+	msgDispatcher.setupCallback("lookup", lookupArg, function(data) {
+		var sel = document.defaultView.getSelection();
+		sel.removeAllRanges();
+		range.setStart(caretPoint.startContainer, startOffset + data.startOffset);
+		range.setEnd(caretPoint.startContainer, startOffset + data.endOffset);
 		sel.addRange(range);
+	});
+}
+
+function getRangeText(range) {
+	var text = "";
+	var nodes = range.cloneContents().childNodes;
+	for(i = 0; i < nodes.length; i++) {
+		if(nodes.item(i).nodeType == Node.TEXT_NODE) {
+			text += nodes.item(i).nodeValue;
+		}
 	}
+	return text;
 }
 
 document.addEventListener("mousemove", onMouseMove, false);
