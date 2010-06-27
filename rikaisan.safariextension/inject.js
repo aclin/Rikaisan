@@ -38,8 +38,12 @@ function MessageDispatcher() {
 msgDispatcher = new MessageDispatcher();
 safari.self.addEventListener("message", 
                              function(msg) { msgDispatcher.respond(msg); }, 
-									  false);
+							 false);
 
+var settings = {
+		lookBackwardLength : 13,
+		lookForwardLength : 13
+};
 
 function testMethod1() {
 	console.log("Starting method 1");
@@ -51,3 +55,22 @@ function testMethod1() {
 };
 
 testMethod1();
+
+function onMouseMove(event) {
+	var sel = document.defaultView.getSelection();
+	sel.removeAllRanges();
+	var caretPoint = document.caretRangeFromPoint(event.clientX, event.clientY);
+	var range = document.createRange();
+	var startOffset = Math.max(0, caretPoint.startOffset - settings.lookBackwardLength);
+	var endOffset = Math.min(caretPoint.startContainer.nodeValue.length, caretPoint.startOffset + settings.lookForwardLength);
+	range.setStart(caretPoint.startContainer, startOffset);
+	range.setEnd(range.startContainer, endOffset);
+	//console.log("Got mouse move. (" + event.clientX + "," + event.clientY + ")");
+	console.log(range.cloneContents());
+	if(range) {
+		console.log("range is non-null");
+		sel.addRange(range);
+	}
+}
+
+document.addEventListener("mousemove", onMouseMove, false);

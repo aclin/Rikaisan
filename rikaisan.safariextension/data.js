@@ -26,11 +26,22 @@ safari.application.addEventListener("message",
 						false);
 
 /**
- * @param word String
+ * @param text
+ * @param point
  * @returns String
  */
-function lookup(word) {
-	return word + " something";
+function lookup(data) {
+	var startOffset = data.point;
+	var endOffset = data.point;
+	while(startOffset > 0 && data.text.charAt(startOffset) != ' ') {
+		startOffset--;
+	}
+	while(endOffset < data.text.length && data.text.charAt(endOffset) != ' ') {
+		endOffset++;
+	}
+	return { definition : data.text.subString(startOffset, endOffset),
+		     startOffset : startOffset,
+		     endOffset : endOffset };
 };
 msgReceiever.registerMethod("lookup", lookup);
 
